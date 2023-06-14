@@ -1,4 +1,3 @@
-<!-- TOC -->
 
 - [Installing Calyptia Core](#installing-calyptia-core)
     - [Components](#components)
@@ -6,8 +5,9 @@
         - [Calyptia CLI](#calyptia-cli)
         - [Helm](#helm)
         - [Manifest](#manifest)
+- [CRD reference](./crd-reference.md)
+- [Manifest](manifest.md)
 
-<!-- /TOC -->
 # Installing Calyptia Core
 
 1. Running Kubernetes cluster
