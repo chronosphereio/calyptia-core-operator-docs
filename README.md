@@ -54,15 +54,17 @@ First set token which can be retrieved from the https://core.calyptia.com under 
 calyptia config set_token xxx
 ```
 
-Install operator into cluster. 
+Install operator into cluster.  Check [here](components.md) for details about core-operator.
+This command will install core-operator into cluster's default namespace to use other namespace use `--kube-namespace` parmeter. 
 ```bash
 calyptia install operator 
 ```
-This command will install core-operator into cluster's default namespace to use other namespace use `--kube-namespace` parmeter. 
 
+Install core instance. Check [here](components.md) for details about core instance
 ```bash
 calyptia create core_instance operator --name <name-of-your-instance> --wait
 ```
+
 The following output indicates that the core instance has been successfully installed:
 ```bash
 Waiting for core operator to be ready...
@@ -76,7 +78,7 @@ ClusterRoleBinding=calyptia-dfasdfa-default-cluster-role-binding
 ServiceAccount=calyptia-dfasdfa-default-service-account
 ```
 Note: resource names will be different for every cluster.
-
+For details about all kubernetes resources that will be created with installation process please check [here](manifest.md)
 ### Helm 
 
 Not available yet
@@ -134,6 +136,7 @@ First obtain desired core instance using CLI
 ```
 calyptia get core_instances
 ```
+
 ```
 NAME                    VERSION ENVIRONMENT PIPELINES TAGS STATUS  AGE
 test-client             v1.1.6  default     3         test running 5 weeks
@@ -153,7 +156,6 @@ pipeline:
 END
 ```
 
-Create a pipeline 
 
 ```bash
 calyptia create pipeline --core-instance test-client --config-file cfg.yaml 
