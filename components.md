@@ -5,7 +5,7 @@ Calyptia Core consists from two components:
 
 1. Core operator 
 
-Core operator extends Kubernets cluster with Pipeline Custom Resource Definition and handles its lifecycle. Pipeline is an abstraction which contains all necessary information to run a Fluentbit instance 
+Core operator extends Kubernets cluster with Pipeline Custom Resource Definition and handles its lifecycle. Pipeline is an abstraction which contains all necessary information to run a Fluentbit instance. For detailed description of operator components please visit this [page](manifest.md) 
 
 2. Core instance
 
