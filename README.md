@@ -160,21 +160,30 @@ spec:
   kind: deployment
   fluentbit:
     config: |-
-      [INPUT]
-          Name   dummy
-          Tag    dummy.log
-
-      [OUTPUT]
-          Name  http
-          Match *
-          Host  out-http 
-          Port  8888
-          Format json
+      pipeline:
+        inputs:
+          - Name: dummy
+            Tag: dummy.log
+        outputs:
+          - Name: http
+            Match: '*'
+            Host: out-http
+            Port: 8888
+            Format: json
 EOF
 ```
 
 ```bash
 pipeline.core.calyptia.com/in-http created
+```
+
+List pipelines in all namespaces
+```bash
+kubectl get pipeline -A
+```
+```bash
+NAME                        STATUS
+in-http                     STARTED
 ```
 
 For detailes about Pipeline resource please visit [CRD Reference](crd-reference.md)
