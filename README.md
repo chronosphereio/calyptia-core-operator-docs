@@ -6,6 +6,10 @@
 ## Installation options
 ### Calyptia CLI 
 
+To install Calyptia CLI follow these [instructions](https://github.com/calyptia/cli#install)
+
+CLI must be at version v1.3.8 or greater
+
 ```
 Setup a new core operator instance
 
@@ -46,28 +50,41 @@ Global Flags:
 
 First set token which can be retrieved from the https://core.calyptia.com under "Settings"
 
-Recommended installation:
 ```bash
 calyptia config set_token xxx
+```
+
+Install operator into cluster. 
+```bash
 calyptia install operator 
 ```
-Alternatively operator can be installed:
+This command will install core-operator into cluster's default namespace to use other namespace use `--kube-namespace` parmeter. 
+
 ```bash
-export TOKEN=xxx
-calyptia install operator
+calyptia create core_instance operator --name <name-of-your-instance> --wait
 ```
-or 
+The following output indicates that the core instance has been successfully installed:
 ```bash
-calyptia install core --token xxx
+Waiting for core operator to be ready...
+Core operator is ready. Took 2.319019ms
+Core instance created successfully
+Resources created:
+Deployment=dfasdfa-sync
+Secret=calyptia-dfasdfa-default-secret
+ClusterRole=calyptia-dfasdfa-default-cluster-role
+ClusterRoleBinding=calyptia-dfasdfa-default-cluster-role-binding
+ServiceAccount=calyptia-dfasdfa-default-service-account
 ```
+Note: resource names will be different for every cluster.
 
 ### Helm 
-TBA - currently not available
 
-### Manifest
+Not available yet
+
+### Install using manifest
 
 ```bash 
-kubectl apply -f https://github.com/calyptia/core-operator/releases/download/v1.0.0-alpha4/manifest.yaml
+kubectl apply -f https://github.com/calyptia/core-operator/releases/download/v1.0.0-RC1/manifest.yaml
 ```
 
 ## Creating first pipeline
@@ -75,8 +92,6 @@ kubectl apply -f https://github.com/calyptia/core-operator/releases/download/v1.
 After installing both the operator and the sync Pipelines can be created using the UI or Calyptia CLI.
 
 ## CLI
-
-To install Calyptia CLI follow these [instructions](https://github.com/calyptia/cli#install)
 
 Creating pipelines
 
@@ -124,6 +139,7 @@ NAME                    VERSION ENVIRONMENT PIPELINES TAGS STATUS  AGE
 test-client             v1.1.6  default     3         test running 5 weeks
 ```
 
+Create a configuration file:
 ```bash
 cat >> cfg.yaml << 'END'
 pipeline:
@@ -136,6 +152,8 @@ pipeline:
         api_key: 1234
 END
 ```
+
+Create a pipeline 
 
 ```bash
 calyptia create pipeline --core-instance test-client --config-file cfg.yaml 
