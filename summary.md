@@ -4,3 +4,4 @@
 - [Components](components.md)
     - [CRD reference](crd-reference.md)
     - [Manifest](manifest.md)
+    - [Troubleshooting](troubleshooting.md)

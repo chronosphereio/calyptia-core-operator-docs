@@ -1,12 +1,19 @@
 # Installing Calyptia Core
 
-1. Running Kubernetes cluster
-2. Kubectl 
+The requirements are:
+
+* Running Kubernetes cluster
+* Kubectl
 
 ## Installation options
-### Calyptia CLI 
 
-```
+### Calyptia CLI
+
+To install Calyptia CLI follow these [instructions](https://github.com/calyptia/cli#install)
+
+CLI must be at version v1.3.8 or greater
+
+```shell
 Setup a new core operator instance
 
 Usage:
@@ -26,11 +33,11 @@ Flags:
       --kube-cluster string                 The name of the kubeconfig cluster to use
       --kube-context string                 The name of the kubeconfig context to use
       --kube-disable-compression            If true, opt-out of response compression for all requests to the server
-      --kube-insecure-skip-tls-verify       If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
+      --kube-insecure-skip-tls-verify       If true, the server certificate will not be checked for validity. This will make your HTTPS connections insecure
   -n, --kube-namespace string               If present, the namespace scope for this CLI request
       --kube-password string                Password for basic authentication to the API server
       --kube-proxy-url string               If provided, this URL will be used to connect via proxy
-      --kube-request-timeout string         The length of time to wait before giving up on a single server request. Non-zero values should contain a corresponding time unit (e.g. 1s, 2m, 3h). A value of zero means don't timeout requests. (default "0")
+      --kube-request-timeout string         The length of time to wait before giving up on a single server request. Non-zero values should contain a corresponding time unit (e.g. 1s, 2m, 3h). A value of zero means do not timeout requests. (default "0")
       --kube-server string                  The address and port of the Kubernetes API server
       --kube-tls-server-name string         If provided, this name will be used to validate server certificate. If this is not provided, hostname used to contact the server is used.
       --kube-token string                   Bearer token for authentication to the API server
@@ -44,30 +51,92 @@ Global Flags:
       --token string       Calyptia Cloud Project token (default "xxx")
 ```
 
-First set token which can be retrieved from the https://core.calyptia.com under "Settings"
+First set token which can be retrieved from the <https://core.calyptia.com> under "Settings"
 
-Recommended installation:
 ```bash
 calyptia config set_token xxx
-calyptia install operator 
 ```
-Alternatively operator can be installed:
+
+Install operator into cluster.  Check [here](./docs/components.md) for details about core-operator.
+This command will install core-operator into cluster's default namespace to use other namespace use `--kube-namespace` parmeter.
+
 ```bash
-export TOKEN=xxx
 calyptia install operator
 ```
-or 
+
+Install core instance - check [here](./docs/components.md) for details about core instance.
+
 ```bash
-calyptia install core --token xxx
+calyptia create core_instance operator --name <name-of-your-instance> --wait
 ```
 
-### Helm 
-TBA - currently not available
+The following output indicates that the core instance has been successfully installed:
 
-### Manifest
+```bash
+Waiting for core operator to be ready...
+Core operator is ready. Took 2.319019ms
+Core instance created successfully
+Resources created:
+Deployment=dfasdfa-sync
+Secret=calyptia-dfasdfa-default-secret
+ClusterRole=calyptia-dfasdfa-default-cluster-role
+ClusterRoleBinding=calyptia-dfasdfa-default-cluster-role-binding
+ServiceAccount=calyptia-dfasdfa-default-service-account
+```
 
-```bash 
-kubectl apply -f https://github.com/calyptia/core-operator/releases/download/v1.0.0-alpha4/manifest.yaml
+Note: resource names will be different for every cluster.
+For details about all kubernetes resources that will be created with installation process please check [here](./docs/manifest.md).
+
+### Helm
+
+First add calyptia helm repository:
+
+```shell
+helm repo add calyptia https://helm.calyptia.com/
+```
+
+or update helm repository:
+
+```shell
+helm repo update
+```
+
+#### core-operator
+
+```shell
+helm install core-operator calyptia/core-operator
+```
+
+Available parameters:
+
+* `namespace` - namespace in which core operator is to be installed. Defaults to `"core-operator"`
+* `fluentbit_image` - FluentBit container image. Defaults to `"ghcr.io/calyptia/core/calyptia-fluent-bit:23.6.1"`
+* `operator_image` - Core operator container image. Defaults to `"ghcr.io/calyptia/core-operator:v1.0.0-RC1"`
+
+*core-instance*
+Core instance is set of two daemons that are pulling and pushing pipelines to and from Cloud API.
+
+```shell
+helm install core-instance calyptia/core-instance --set coreInstance=<your-core-instance> --set cloudToken=<your-token>
+```
+
+* `name` - Name for the core instance. Defaults to `"core-instance"`
+* `namespace` - namespace in which core instance is to be installed. Defaults to `"core-operator"`
+* `clusterLogging` - Defauts to `"false"`
+* `coreInstance` - Core instance name
+* `coreSecret` - Name of the secret containing private key used to decrypt secrets from cloud API. Defaults to `"core-instance"`
+* `cloudToken` - Cloud API token.
+* `cloudUrl` - Cloud API URL. Defaults to `"https://cloud-api.calyptia.com"`
+* `fromcloudImage` - Container image for "from cloud" component of the sync. Defaults to `"ghcr.io/calyptia/core-operator/sync-from-cloud:v1.0.0-RC1"`
+* `tocloudImage` - Container image for "to cloud" component of the sync. Defaults to `"ghcr.io/calyptia/core-operator/sync-to-cloud:v1.0.0-RC1"`
+* `notls` - Defaults to `"true"`
+* `interval` - Sync interval. Defaults to `"15s"`
+* `serviceAccount` - Service account with all necessary RBAC. Defaults to `"controller-manager"`
+
+### Install using manifest
+
+```bash
+kubectl apply -f https://github.com/calyptia/core-operator/releases/download/v1.0.0-RC1/manifest.yaml
 ```
 
 ## Creating first pipeline
@@ -75,8 +144,6 @@ kubectl apply -f https://github.com/calyptia/core-operator/releases/download/v1.
 After installing both the operator and the sync Pipelines can be created using the UI or Calyptia CLI.
 
 ## CLI
-
-To install Calyptia CLI follow these [instructions](https://github.com/calyptia/cli#install)
 
 Creating pipelines
 
@@ -115,14 +182,16 @@ Global Flags:
       --cloud-url string   Calyptia Cloud URL (default "https://cloud-api.calyptia.com")
       --token string       Calyptia Cloud Project token (default "xxx")
 ```
+
 First obtain desired core instance using CLI
-```
-calyptia get core_instances
-```
-```
+
+```shell
+$ calyptia get core_instances
 NAME                    VERSION ENVIRONMENT PIPELINES TAGS STATUS  AGE
 test-client             v1.1.6  default     3         test running 5 weeks
 ```
+
+Create a configuration file:
 
 ```bash
 cat >> cfg.yaml << 'END'
@@ -137,10 +206,14 @@ pipeline:
 END
 ```
 
+Create a pipeline using this configuration:
+
 ```bash
-calyptia create pipeline --core-instance test-client --config-file cfg.yaml 
+calyptia create pipeline --core-instance test-client --config-file cfg.yaml
 ```
-Result
+
+This should result in success:
+
 ```bash
 ID                                   NAME                      AGE
 2481080a-8a31-404d-96e3-8f9db9327fa0 magical-misty-knight-e8ce Just now
@@ -149,6 +222,7 @@ ID                                   NAME                      AGE
 ### Using kubectl
 
 Create Pipeline using kubectl:
+
 ```yaml
 cat <<EOF | kubectl apply -f -
 apiVersion: core.calyptia.com/v1
@@ -177,13 +251,12 @@ EOF
 pipeline.core.calyptia.com/in-http created
 ```
 
-List pipelines in all namespaces
+List pipelines in all namespaces:
+
 ```bash
 kubectl get pipeline -A
-```
-```bash
 NAME                        STATUS
 in-http                     STARTED
 ```
 
-For detailes about Pipeline resource please visit [CRD Reference](crd-reference.md)
+For detailes about Pipeline resource please visit [CRD Reference](./docs/crd-reference.md).
