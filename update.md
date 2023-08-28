@@ -2,7 +2,7 @@
 
 **NOTE:*** avaialble in versions v1.7.0+
 
-## Updating Operator image
+## CLI Updating Operator image
 
 How to update operator image using calyptia CLI:
 
@@ -39,7 +39,7 @@ failed while waiting for deployment to start:
 * pod calyptia-core-controller-manager-6fd8867b6f-zgzgc, Message: rpc error: code = NotFound desc = failed to pull and unpack image "ghcr.io/calyptia/core-operator:v1.0.155": failed to resolve reference "ghcr.io/calyptia/core-operator:v1.0.155": ghcr.io/calyptia/core-operator:v1.0.155: not found'
 ```
 
-## Updating core-instance image
+## CLI Updating core-instance image
 
 How to update core-instance image using calyptia CLI:
 
@@ -75,3 +75,17 @@ Error: could not update core-instance: to version v1.0.155 failed while waiting 
 * pod calyptia-refined-siren-d0db-default-sync-56798647fb-q6wls, Message: rpc error: code = NotFound desc = failed to pull and unpack image "ghcr.io/calyptia/core-operator/sync-from-cloud:v1.0.155": failed to resolve reference "ghcr.io/calyptia/core-operator/sync-from-cloud:v1.0.155": ghcr.io/calyptia/core-operator/sync-from-cloud:v1.0.155: not found
 rpc error: code = NotFound desc = failed to pull and unpack image "ghcr.io/calyptia/core-operator/sync-to-cloud:v1.0.155": failed to resolve reference "ghcr.io/calyptia/core-operator/sync-to-cloud:v1.0.155": ghcr.io/calyptia/core-operator/sync-to-cloud:v1.0.155: not found'
 ```
+
+## Helm - update core-operator image
+
+```shell
+helm upgrade core-operator calyptic/core-operator --set operatorImage=ghcr.io/calyptia/core-operator:v1.0.15
+```
+
+## Helm - update core-instance image
+
+```shell
+helm upgrade core-operator calyptic/core-instance --set fromcloudImage=ghcr.io/calyptia/core-operator/sync-from-cloud:v1.0.15 --set tocloudImage=ghcr.io/calyptia/core-operator/sync-to-cloud:v1.0.15
+```
+
+List of available versions can be obtained [here](https://github.com/calyptia/core-operator/tags) (the link isn't publicly available)
