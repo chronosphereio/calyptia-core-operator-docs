@@ -79,13 +79,13 @@ rpc error: code = NotFound desc = failed to pull and unpack image "ghcr.io/calyp
 ## Helm - update core-operator image
 
 ```shell
-helm upgrade core-operator calyptic/core-operator --set operatorImage=ghcr.io/calyptia/core-operator:v1.0.15
+helm upgrade core-operator calyptia/core-operator --set operatorImage=ghcr.io/calyptia/core-operator:v1.0.15
 ```
 
 ## Helm - update core-instance image
 
 ```shell
-helm upgrade core-operator calyptic/core-instance --set fromcloudImage=ghcr.io/calyptia/core-operator/sync-from-cloud:v1.0.15 --set tocloudImage=ghcr.io/calyptia/core-operator/sync-to-cloud:v1.0.15
+helm upgrade core-operator calyptia/core-instance --set fromcloudImage=ghcr.io/calyptia/core-operator/sync-from-cloud:v1.0.15 --set tocloudImage=ghcr.io/calyptia/core-operator/sync-to-cloud:v1.0.15
 ```
 
 List of available versions can be obtained [here](https://github.com/calyptia/core-operator/tags) (the link isn't publicly available)
