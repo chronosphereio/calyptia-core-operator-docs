@@ -113,7 +113,18 @@ PipelineSpec defines the desired state of Pipeline
             <i>Default</i>: ghcr.io/calyptia/core/calyptia-fluent-bit:23.2.3<br/>
         </td>
         <td>false</td>
-      </tr><tr>
+      </tr>
+      <tr>
+        <td><b>hotReload</b></td>
+        <td>bool</td>
+        <td>
+          <br/>
+          <br/>
+            <i>Default</i>: false<br/>
+        </td>
+        <td>false</td>
+      </tr
+      <tr>
         <td><b><a href="#pipelinespecportsindex">ports</a></b></td>
         <td>[]object</td>
         <td>
